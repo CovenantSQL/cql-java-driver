@@ -55,13 +55,12 @@ public class CovenantURLParser {
             throw new IllegalArgumentException("port is missed or wrong");
         }
         props.setPort(port);
-        String database = StringUtils.strip(uri.getPath(), "/");
+        String database = uri.getPath();
         if (StringUtils.isEmpty(database)) {
             database = defaults.getProperty(CovenantConnectionSettings.DATABASE.getKey());
         }
 
-        database = StringUtils.stripToEmpty(database);
-
+        database = StringUtils.strip(StringUtils.stripToEmpty(database), "/");
         Matcher m = DB_PATTERN.matcher(database);
 
         if (m.matches()) {
