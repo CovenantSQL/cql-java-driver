@@ -26,6 +26,46 @@ import java.util.Map;
 
 public abstract class CovenantMockResultSetUnused implements ResultSet {
     @Override
+    public Date getDate(int columnIndex, Calendar cal) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Time getTime(int columnIndex, Calendar cal) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Blob getBlob(int columnIndex) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Blob getBlob(String columnLabel) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object getObject(int columnIndex, Map<String, Class<?>> map) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object getObject(String columnLabel, Map<String, Class<?>> map) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public InputStream getAsciiStream(int columnIndex) throws SQLException {
         throw new UnsupportedOperationException();
     }

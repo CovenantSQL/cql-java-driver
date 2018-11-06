@@ -16,6 +16,8 @@
 
 package io.covenantsql.connector.response;
 
+import io.covenantsql.connector.util.TypeUtils;
+
 import java.sql.SQLException;
 
 public class CovenantResultSetMetaData extends CovenantMockResultSetMetaDataUnused {
@@ -57,42 +59,44 @@ public class CovenantResultSetMetaData extends CovenantMockResultSetMetaDataUnus
 
     @Override
     public int getColumnCount() throws SQLException {
-        return 0;
+        return resultSet.getColumnNames().length;
     }
 
     @Override
     public String getColumnLabel(int column) throws SQLException {
-        return null;
+        return resultSet.getColumnNames()[column - 1];
     }
 
     @Override
     public String getColumnName(int column) throws SQLException {
-        return null;
+        return resultSet.getColumnNames()[column - 1];
     }
 
     @Override
     public String getTableName(int column) throws SQLException {
-        return null;
+        return resultSet.getTable();
     }
 
     @Override
     public String getCatalogName(int column) throws SQLException {
-        return null;
+        return resultSet.getDB();
     }
 
     @Override
     public int getColumnType(int column) throws SQLException {
-        return 0;
+        return TypeUtils.toSQLType(getColumnTypeName(column));
     }
 
     @Override
     public String getColumnTypeName(int column) throws SQLException {
-        return null;
+        return resultSet.getTypes()[column - 1];
     }
 
     @Override
     public String getColumnClassName(int column) throws SQLException {
-        return null;
+        String columnTypeName = getColumnTypeName(column);
+        int sqlType = TypeUtils.toSQLType(columnTypeName);
+        return TypeUtils.toClass(sqlType).getName();
     }
 
     @Override

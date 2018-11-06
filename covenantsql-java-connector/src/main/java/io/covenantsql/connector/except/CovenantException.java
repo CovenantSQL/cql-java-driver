@@ -19,13 +19,18 @@ package io.covenantsql.connector.except;
 import java.sql.SQLException;
 
 public class CovenantException extends SQLException {
+    public CovenantException(String message, String host, int port) {
+        super(String.format("CovenantException, message: %s, host: %s, port: %s",
+            message, host, port), null, 0);
+    }
+
     public CovenantException(Throwable cause, String host, int port) {
         super(String.format("CovenantException, host: %s, port: %d; %s",
             host, port, (cause == null ? "" : cause.getMessage())), null, 0, cause);
     }
 
     public CovenantException(String message, Throwable cause, String host, int port) {
-        super("CovenantException, message: " + message + ", host: " + host + ", port: " + port + "; "
-            + (cause == null ? "" : cause.getMessage()), null, 0, cause);
+        super(String.format("CovenantException, message: %s, host: %s, port: %d; %s",
+            message, host, port, (cause == null ? "" : cause.getMessage())), null, 0, cause);
     }
 }

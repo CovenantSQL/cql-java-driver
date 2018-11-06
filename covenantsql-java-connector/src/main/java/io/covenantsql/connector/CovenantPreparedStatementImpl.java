@@ -28,17 +28,21 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.*;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 public class CovenantPreparedStatementImpl extends CovenantStatementImpl implements CovenantPreparedStatement {
     private static final Logger LOG = LoggerFactory.getLogger(CovenantPreparedStatement.class);
+    private static final SimpleDateFormat dateFormat;
+    private static final SimpleDateFormat dateTimeFormat;
 
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    static {
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        TimeZone tzUTC = TimeZone.getTimeZone("UTC");
+        dateTimeFormat.setTimeZone(tzUTC);
+    }
 
     private final String sql;
     private final List<String> sqlParts;
@@ -233,13 +237,11 @@ public class CovenantPreparedStatementImpl extends CovenantStatementImpl impleme
 
     @Override
     public void setTime(int parameterIndex, Time x) throws SQLException {
-        // TODO: convert time to utc format
         setBind(parameterIndex, dateTimeFormat.format(x), true);
     }
 
     @Override
     public void setTimestamp(int parameterIndex, Timestamp x) throws SQLException {
-        // TODO: convert time to utc format
         setBind(parameterIndex, dateTimeFormat.format(x), true);
     }
 
@@ -321,6 +323,7 @@ public class CovenantPreparedStatementImpl extends CovenantStatementImpl impleme
 
     @Override
     public void addBatch() throws SQLException {
+        // TODO: implement batch processing feature
         batchRows.add(buildBinds());
         createBinds();
     }
@@ -357,19 +360,16 @@ public class CovenantPreparedStatementImpl extends CovenantStatementImpl impleme
 
     @Override
     public void setDate(int parameterIndex, Date x, Calendar cal) throws SQLException {
-        // TODO: support calendar date type
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public void setTime(int parameterIndex, Time x, Calendar cal) throws SQLException {
-        // TODO: support calendar time type
         throw new SQLFeatureNotSupportedException();
     }
 
     @Override
     public void setTimestamp(int parameterIndex, Timestamp x, Calendar cal) throws SQLException {
-        // TODO: support calendar timestamp type
         throw new SQLFeatureNotSupportedException();
     }
 

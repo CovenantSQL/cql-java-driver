@@ -16,14 +16,25 @@
 
 package io.covenantsql.connector;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.covenantsql.connector.except.CovenantException;
 import io.covenantsql.connector.response.CovenantResultSet;
+import io.covenantsql.connector.response.beans.CovenantExecResponseBean;
+import io.covenantsql.connector.response.beans.CovenantQueryResponseBean;
 import io.covenantsql.connector.settings.CovenantProperties;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.fluent.Executor;
+import org.apache.http.client.fluent.Form;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.net.URI;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,6 +43,7 @@ public class CovenantStatementImpl extends CovenantMockStatementUnused implement
     private static final Logger LOG = LoggerFactory.getLogger(CovenantStatementImpl.class);
     private static final String API_EXEC = "/v1/exec";
     private static final String API_QUERY = "/v1/query";
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private final Executor executor;
     private final CloseableHttpClient httpClient;
@@ -54,16 +66,98 @@ public class CovenantStatementImpl extends CovenantMockStatementUnused implement
         return StringUtils.startsWithIgnoreCase(sql, "SELECT");
     }
 
+    private static String extractTableName(String sql) {
+        if (isSelect(sql)) {
+            String[] tokens = StringUtils.splitByWholeSeparatorPreserveAllTokens(sql, null);
+
+            boolean nextIsTableName = false;
+
+            for (String s : tokens) {
+                if (nextIsTableName) {
+                    // parse table name
+                    return StringUtils.stripToEmpty(StringUtils.strip(s, "'`"));
+                }
+
+                if (StringUtils.equalsIgnoreCase(s, "FROM")) {
+                    nextIsTableName = true;
+                }
+            }
+        }
+
+        return "";
+    }
+
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
-        // TODO: issue query
-        return null;
+        try {
+            if (isSelect(sql)) {
+                URI uri = new URIBuilder()
+                    .setHost(properties.getHost())
+                    .setPort(properties.getPort())
+                    .setScheme(properties.isSsl() ? "https" : "http")
+                    .setPath(API_QUERY)
+                    .build();
+
+                CovenantQueryResponseBean resultBean = executor.execute(Request.Post(uri)
+                    .bodyForm(Form.form()
+                        .add("database", properties.getDatabase())
+                        .add("query", sql)
+                        .build()))
+                    .handleResponse(new ResponseHandler<CovenantQueryResponseBean>() {
+                        @Override
+                        public CovenantQueryResponseBean handleResponse(HttpResponse response) throws IOException {
+                            return objectMapper.readValue(response.getEntity().getContent(), CovenantQueryResponseBean.class);
+                        }
+                    });
+
+                if (!resultBean.isSuccess()) {
+                    throw new CovenantException(resultBean.getStatus(), properties.getHost(), properties.getPort());
+                }
+
+                currentResultSet = new CovenantResultSet(resultBean.getData(), database, extractTableName(sql), this);
+                currentResultSet.setMaxRows(maxRows);
+                return currentResultSet;
+            } else {
+                executeUpdate(sql);
+                return null;
+            }
+        } catch (Exception e) {
+            // re-throw
+            throw new CovenantException(e, properties.getHost(), properties.getPort());
+        }
     }
 
     @Override
     public int executeUpdate(String sql) throws SQLException {
-        // TODO:
-        return 0;
+        try {
+            URI uri = new URIBuilder()
+                .setHost(properties.getHost())
+                .setPort(properties.getPort())
+                .setScheme(properties.isSsl() ? "https" : "http")
+                .setPath(API_EXEC)
+                .build();
+
+            CovenantExecResponseBean resultBean = executor.execute(Request.Post(uri)
+                .bodyForm(Form.form()
+                    .add("database", properties.getDatabase())
+                    .add("query", sql)
+                    .build()))
+                .handleResponse(new ResponseHandler<CovenantExecResponseBean>() {
+                    @Override
+                    public CovenantExecResponseBean handleResponse(HttpResponse response) throws IOException {
+                        return objectMapper.readValue(response.getEntity().getContent(), CovenantExecResponseBean.class);
+                    }
+                });
+
+            if (!resultBean.isSuccess()) {
+                throw new CovenantException(resultBean.getStatus(), properties.getHost(), properties.getPort());
+            }
+
+            return 1;
+        } catch (Exception e) {
+            // re-throw
+            throw new CovenantException(e, properties.getHost(), properties.getPort());
+        }
     }
 
     @Override

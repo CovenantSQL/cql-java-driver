@@ -118,6 +118,11 @@
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -125,5 +130,6 @@
         <guava.version>26.0-jre</guava.version>
         <slf4j.version>1.7.25</slf4j.version>
         <commons-lang.version>3.8</commons-lang.version>
+        <jackson.version>2.9.6</jackson.version>
     </properties>
 </project>
