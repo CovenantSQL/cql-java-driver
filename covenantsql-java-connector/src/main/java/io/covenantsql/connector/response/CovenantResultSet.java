@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CovenantResultSet extends CovenantMockResultSetUnused {
+    public static final CovenantResultSet EMPTY;
     private static final String[] dateFormats = {
         "yyyy-MM-dd'T'HH:mm:ssXXX",
         "yyyy-MM-dd'T'HH:mm:ss",
@@ -47,6 +48,10 @@ public class CovenantResultSet extends CovenantMockResultSetUnused {
         "dd-MM-yyyy",
     };
 
+    static {
+        EMPTY = new CovenantResultSet();
+    }
+
     private final String db;
     private final String table;
 
@@ -61,6 +66,15 @@ public class CovenantResultSet extends CovenantMockResultSetUnused {
     private CovenantStatement statement;
     private Object[] values;
     private boolean closed = false;
+
+    private CovenantResultSet() {
+        this.db = "";
+        this.table = "";
+        this.types = new String[0];
+        this.columns = new String[0];
+        this.dataBean = null;
+        this.closed = true;
+    }
 
     public CovenantResultSet(CovenantQueryResponseBean.CovenantQueryResponseDataBean bean, String db, String table,
                              CovenantStatement statement) {

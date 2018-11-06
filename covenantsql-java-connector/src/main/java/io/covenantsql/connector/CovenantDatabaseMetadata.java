@@ -16,6 +16,7 @@
 
 package io.covenantsql.connector;
 
+import io.covenantsql.connector.response.CovenantResultSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -695,8 +696,7 @@ public class CovenantDatabaseMetadata implements DatabaseMetaData {
 
     @Override
     public ResultSet getPrimaryKeys(String catalog, String schema, String table) throws SQLException {
-        // TODO: build primary keys settings
-        return null;
+        return getEmptyResultSet();
     }
 
     @Override
@@ -959,5 +959,9 @@ public class CovenantDatabaseMetadata implements DatabaseMetaData {
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return iface.isAssignableFrom(getClass());
+    }
+
+    private ResultSet getEmptyResultSet() {
+        return CovenantResultSet.EMPTY;
     }
 }
