@@ -86,7 +86,11 @@ public class CovenantHTTPClientBuilder {
 
     private SSLContext getSSLContext()
         throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, KeyManagementException, UnrecoverableKeyException {
-        SSLContextBuilder ctxBuilder = SSLContexts.custom().loadKeyMaterial(getKeyStore(), "".toCharArray());
+        SSLContextBuilder ctxBuilder = SSLContexts.custom();
+
+        if (!properties.getKeyPath().isEmpty() && !properties.getCertPath().isEmpty()) {
+            ctxBuilder.loadKeyMaterial(getKeyStore(), "".toCharArray());
+        }
 
         if (StringUtils.equalsIgnoreCase(properties.getSslMode(), "none")) {
             ctxBuilder.loadTrustMaterial(new TrustAllStrategy());

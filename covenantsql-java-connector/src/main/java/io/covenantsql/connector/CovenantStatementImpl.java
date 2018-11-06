@@ -63,7 +63,9 @@ public class CovenantStatementImpl extends CovenantMockStatementUnused implement
     }
 
     private static boolean isSelect(String sql) {
-        return StringUtils.startsWithIgnoreCase(sql, "SELECT");
+        return StringUtils.startsWithIgnoreCase(sql, "SELECT") ||
+            StringUtils.startsWithIgnoreCase(sql, "SHOW") ||
+            StringUtils.startsWithIgnoreCase(sql, "DESC");
     }
 
     private static String extractTableName(String sql) {

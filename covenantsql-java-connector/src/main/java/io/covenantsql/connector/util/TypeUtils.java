@@ -56,10 +56,6 @@ public class TypeUtils {
     }
 
     public static int toSQLTypeWithDetection(String type, Object value) {
-        if (value == null) {
-            return Types.NULL;
-        }
-
         int typeResult = toSQLType(type);
 
         if (typeResult != Types.OTHER) {
