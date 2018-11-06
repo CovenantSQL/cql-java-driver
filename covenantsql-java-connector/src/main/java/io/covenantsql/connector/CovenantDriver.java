@@ -16,6 +16,8 @@
 
 package io.covenantsql.connector;
 
+import io.covenantsql.connector.settings.CovenantProperties;
+import io.covenantsql.connector.util.LogProxy;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,20 +27,31 @@ import java.util.Properties;
 
 public class CovenantDriver implements Driver {
     public static final String PREFIX = "jdbc:covenantsql:";
+    public static final String Version;
+    public static final int MajorVersion;
+    public static final int MinorVersion;
+
     private static final Logger LOG = LoggerFactory.getLogger(CovenantDriver.class);
-    private static int majorVersion = 0;
-    private static int minorVersion = 0;
 
     static {
         // get version
-        String version = CovenantDriver.class.getPackage().getImplementationVersion();
+        Version = CovenantDriver.class.getPackage().getImplementationVersion();
+        int majorVersion = 0;
+
         try {
-            majorVersion = Integer.valueOf(StringUtils.substringBefore(version, "."));
+            majorVersion = Integer.valueOf(StringUtils.substringBefore(Version, "."));
         } catch (NumberFormatException ignored) {
+        } finally {
+            MajorVersion = majorVersion;
         }
+
+        int minorVersion = 0;
+
         try {
-            minorVersion = Integer.valueOf(StringUtils.substringAfterLast(version, "."));
+            minorVersion = Integer.valueOf(StringUtils.substringAfterLast(Version, "."));
         } catch (NumberFormatException ignored) {
+        } finally {
+            MinorVersion = minorVersion;
         }
 
         // register driver
@@ -59,15 +72,6 @@ public class CovenantDriver implements Driver {
         return url != null && StringUtils.startsWithIgnoreCase(url, PREFIX);
     }
 
-    public static Connection createConnection(String url) throws SQLException {
-        if (!isValidURL(url)) {
-            throw new SQLException("invalid database address: " + url);
-        }
-
-        url = StringUtils.stripToEmpty(url);
-        return new CovenantConnection(url);
-    }
-
     /**
      * @param url
      * @param info
@@ -75,8 +79,18 @@ public class CovenantDriver implements Driver {
      * @throws SQLException
      */
     @Override
-    public Connection connect(String url, Properties info) throws SQLException {
-        return createConnection(url);
+    public CovenantConnection connect(String url, Properties info) throws SQLException {
+        return connect(url, new CovenantProperties(info));
+    }
+
+    public CovenantConnection connect(String url, CovenantProperties properties) throws SQLException {
+        if (!isValidURL(url)) {
+            throw new SQLException("invalid database address: " + url);
+        }
+
+        url = StringUtils.stripToEmpty(url);
+        CovenantConnectionImpl connection = new CovenantConnectionImpl(url, properties);
+        return LogProxy.wrap(CovenantConnection.class, connection);
     }
 
     /**
@@ -105,7 +119,7 @@ public class CovenantDriver implements Driver {
      */
     @Override
     public int getMajorVersion() {
-        return majorVersion;
+        return MajorVersion;
     }
 
     /**
@@ -113,7 +127,7 @@ public class CovenantDriver implements Driver {
      */
     @Override
     public int getMinorVersion() {
-        return minorVersion;
+        return MinorVersion;
     }
 
     /**

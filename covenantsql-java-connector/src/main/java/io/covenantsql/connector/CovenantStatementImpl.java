@@ -48,7 +48,7 @@ public class CovenantStatementImpl extends CovenantMockStatementUnused implement
     private final Executor executor;
     private final CloseableHttpClient httpClient;
     private final String database;
-    protected CovenantProperties properties = new CovenantProperties();
+    protected CovenantProperties properties;
     private CovenantConnection connection;
     private CovenantResultSet currentResultSet;
     private int queryTimeout;

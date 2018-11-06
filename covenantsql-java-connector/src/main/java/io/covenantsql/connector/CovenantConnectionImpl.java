@@ -77,7 +77,7 @@ public class CovenantConnectionImpl extends CovenantMockConnectionUnused impleme
 
     @Override
     public DatabaseMetaData getMetaData() throws SQLException {
-        return null;
+        return LogProxy.wrap(DatabaseMetaData.class, new CovenantDatabaseMetadata(url, this));
     }
 
 

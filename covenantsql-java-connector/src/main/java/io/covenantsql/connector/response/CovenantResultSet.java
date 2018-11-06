@@ -21,7 +21,6 @@ import io.covenantsql.connector.response.beans.CovenantQueryResponseBean;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.*;
@@ -63,7 +62,7 @@ public class CovenantResultSet extends CovenantMockResultSetUnused {
     private boolean closed = false;
 
     public CovenantResultSet(CovenantQueryResponseBean.CovenantQueryResponseDataBean bean, String db, String table,
-                             CovenantStatement statement) throws IOException {
+                             CovenantStatement statement) {
         this.db = db;
         this.table = table;
         this.statement = statement;
@@ -77,7 +76,7 @@ public class CovenantResultSet extends CovenantMockResultSetUnused {
     }
 
     @Override
-    public int getRow() throws SQLException {
+    public int getRow() {
         return rowNumber + 1;
     }
 

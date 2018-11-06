@@ -16,59 +16,91 @@
 
 package io.covenantsql.connector;
 
+import io.covenantsql.connector.settings.CovenantProperties;
+
 import javax.sql.DataSource;
 import java.io.PrintWriter;
-import java.sql.Connection;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 public class CovenantDatasource implements DataSource {
-    public CovenantDatasource() {
+    private final CovenantDriver driver = new CovenantDriver();
+    private final String url;
+    private int loginTimeout;
+    private PrintWriter printWriter;
+    private CovenantProperties properties;
+
+    public CovenantDatasource(String url) {
+        this(url, new CovenantProperties());
+    }
+
+    public CovenantDatasource(String url, Properties info) {
+        this(url, new CovenantProperties(info));
+    }
+
+    public CovenantDatasource(String url, CovenantProperties properties) {
+        if (url == null) {
+            throw new IllegalArgumentException("Incorrect CovenantSQL jdbc url. It must be not null");
+        }
+
+        this.url = url;
+
+        try {
+            this.properties = CovenantURLParser.parse(url, properties.asProperties());
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
-        return null;
+    public CovenantConnection getConnection() throws SQLException {
+        return driver.connect(url, properties);
     }
 
     @Override
-    public Connection getConnection(String username, String password) throws SQLException {
-        return null;
+    public CovenantConnection getConnection(String username, String password) throws SQLException {
+        // no username/password is required
+        return driver.connect(url, properties);
     }
 
     @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
-        return null;
+        if (iface.isAssignableFrom(getClass())) {
+            return iface.cast(this);
+        }
+        throw new SQLException("Cannot unwrap to " + iface.getName());
     }
 
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return false;
+        return iface.isAssignableFrom(getClass());
     }
 
     @Override
     public PrintWriter getLogWriter() throws SQLException {
-        return null;
+        return printWriter;
     }
 
     @Override
     public void setLogWriter(PrintWriter out) throws SQLException {
-
+        this.printWriter = out;
     }
 
     @Override
     public int getLoginTimeout() throws SQLException {
-        return 0;
+        return loginTimeout;
     }
 
     @Override
     public void setLoginTimeout(int seconds) throws SQLException {
-
+        this.loginTimeout = seconds;
     }
 
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        return null;
+        throw new SQLFeatureNotSupportedException();
     }
 }

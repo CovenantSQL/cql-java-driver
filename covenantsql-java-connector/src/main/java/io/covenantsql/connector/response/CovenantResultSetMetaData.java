@@ -100,6 +100,7 @@ public class CovenantResultSetMetaData extends CovenantMockResultSetMetaDataUnus
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T unwrap(Class<T> iface) throws SQLException {
         if (isWrapperFor(iface)) {
             return (T) this;
