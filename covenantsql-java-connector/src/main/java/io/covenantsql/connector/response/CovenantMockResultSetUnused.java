@@ -24,87 +24,7 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.Map;
 
-public abstract class AbstractResultSet implements ResultSet {
-    @Override
-    public boolean next() throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void close() throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean wasNull() throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String getString(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean getBoolean(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public byte getByte(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public short getShort(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int getInt(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public long getLong(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public float getFloat(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public double getDouble(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public byte[] getBytes(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Date getDate(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Time getTime(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Timestamp getTimestamp(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
+public abstract class CovenantMockResultSetUnused implements ResultSet {
     @Override
     public InputStream getAsciiStream(int columnIndex) throws SQLException {
         throw new UnsupportedOperationException();
@@ -118,71 +38,6 @@ public abstract class AbstractResultSet implements ResultSet {
 
     @Override
     public InputStream getBinaryStream(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String getString(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean getBoolean(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public byte getByte(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public short getShort(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int getInt(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public long getLong(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public float getFloat(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public double getDouble(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public byte[] getBytes(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Date getDate(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Time getTime(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Timestamp getTimestamp(String columnLabel) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
@@ -218,21 +73,6 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     @Override
-    public ResultSetMetaData getMetaData() throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Object getObject(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Object getObject(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public int findColumn(String columnLabel) throws SQLException {
         throw new UnsupportedOperationException();
     }
@@ -244,16 +84,6 @@ public abstract class AbstractResultSet implements ResultSet {
 
     @Override
     public Reader getCharacterStream(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
@@ -588,17 +418,7 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     @Override
-    public Object getObject(int columnIndex, Map<String, Class<?>> map) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public Ref getRef(int columnIndex) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Blob getBlob(int columnIndex) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
@@ -613,17 +433,7 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     @Override
-    public Object getObject(String columnLabel, Map<String, Class<?>> map) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public Ref getRef(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Blob getBlob(String columnLabel) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
@@ -634,36 +444,6 @@ public abstract class AbstractResultSet implements ResultSet {
 
     @Override
     public Array getArray(String columnLabel) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Date getDate(int columnIndex, Calendar cal) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Date getDate(String columnLabel, Calendar cal) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Time getTime(int columnIndex, Calendar cal) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Time getTime(String columnLabel, Calendar cal) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Timestamp getTimestamp(int columnIndex, Calendar cal) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Timestamp getTimestamp(String columnLabel, Calendar cal) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
@@ -955,21 +735,6 @@ public abstract class AbstractResultSet implements ResultSet {
     @Override
     public void updateNClob(String columnLabel, Reader reader) throws SQLException {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    public long[] getLongArray(String column) throws SQLException {
-        Array array = getArray(column);
-        return (long[]) array.getArray(); // optimistic
     }
 }
 
