@@ -18,6 +18,7 @@ package io.covenantsql.connector.response;
 
 import io.covenantsql.connector.CovenantStatement;
 import io.covenantsql.connector.response.beans.CovenantQueryResponseBean;
+import io.covenantsql.connector.util.TypeUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -173,7 +174,46 @@ public class CovenantResultSet extends CovenantMockResultSetUnused {
 
     @Override
     public Object getObject(int columnIndex) throws SQLException {
-        return getValue(columnIndex);
+        // with type detection
+        Object val = getValue(columnIndex);
+        int sqlType = TypeUtils.toSQLTypeWithDetection(types[columnIndex - 1], val);
+
+        if (sqlType == Types.OTHER) {
+            return val;
+        }
+
+        Class classType = TypeUtils.toClass(sqlType);
+
+        switch (classType.getSimpleName()) {
+            case "Boolean":
+                return getBoolean(columnIndex);
+            case "Integer":
+                return getInt(columnIndex);
+            case "Long":
+                return getLong(columnIndex);
+            case "Double":
+                return getDouble(columnIndex);
+            case "BigDecimal":
+                return getBigDecimal(columnIndex);
+            case "String":
+                return getString(columnIndex);
+            case "Float":
+                return getFloat(columnIndex);
+            case "Date":
+                return getDate(columnIndex);
+            case "Timestamp":
+                return getTimestamp(columnIndex);
+            case "Time":
+                return getTime(columnIndex);
+        }
+
+        return val;
+    }
+
+    @Override
+    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+        // TODO: support auto type cast
+        throw new UnsupportedOperationException();
     }
 
     @Override

@@ -26,8 +26,8 @@ public class CovenantProperties {
 
     private int connectionTimeout;
     private int operationTimeout;
-    private String keyStorePath;
-    private String keyStorePassword;
+    private String keyPath;
+    private String certPath;
     private boolean ssl;
     private String sslMode;
     private String database;
@@ -39,8 +39,8 @@ public class CovenantProperties {
     public CovenantProperties(Properties info) {
         this.connectionTimeout = getSetting(info, CovenantConnectionSettings.CONNECTION_TIMEOUT);
         this.operationTimeout = getSetting(info, CovenantConnectionSettings.OPERATION_TIMEOUT);
-        this.keyStorePath = getSetting(info, CovenantConnectionSettings.KEYSTORE_PATH);
-        this.keyStorePassword = getSetting(info, CovenantConnectionSettings.KEYSTORE_PASSWORD);
+        this.keyPath = getSetting(info, CovenantConnectionSettings.KEY_PATH);
+        this.certPath = getSetting(info, CovenantConnectionSettings.CERT_PATH);
         this.ssl = getSetting(info, CovenantConnectionSettings.SSL);
         this.sslMode = getSetting(info, CovenantConnectionSettings.SSL_MODE);
         this.database = getSetting(info, CovenantConnectionSettings.DATABASE);
@@ -51,8 +51,8 @@ public class CovenantProperties {
         setPort(properties.port);
         setConnectionTimeout(properties.connectionTimeout);
         setOperationTimeout(properties.operationTimeout);
-        setKeyStorePath(properties.keyStorePath);
-        setKeyStorePassword(properties.keyStorePassword);
+        setKeyPath(properties.keyPath);
+        setCertPath(properties.certPath);
         setSsl(properties.ssl);
         setSslMode(properties.sslMode);
         setDatabase(properties.database);
@@ -62,8 +62,8 @@ public class CovenantProperties {
         PropertiesBuilder ret = new PropertiesBuilder();
         ret.put(CovenantConnectionSettings.CONNECTION_TIMEOUT.getKey(), String.valueOf(connectionTimeout));
         ret.put(CovenantConnectionSettings.OPERATION_TIMEOUT.getKey(), String.valueOf(operationTimeout));
-        ret.put(CovenantConnectionSettings.KEYSTORE_PATH.getKey(), String.valueOf(keyStorePath));
-        ret.put(CovenantConnectionSettings.KEYSTORE_PASSWORD.getKey(), String.valueOf(keyStorePassword));
+        ret.put(CovenantConnectionSettings.KEY_PATH.getKey(), String.valueOf(keyPath));
+        ret.put(CovenantConnectionSettings.CERT_PATH.getKey(), String.valueOf(certPath));
         ret.put(CovenantConnectionSettings.SSL.getKey(), String.valueOf(ssl));
         ret.put(CovenantConnectionSettings.SSL_MODE.getKey(), String.valueOf(sslMode));
         ret.put(CovenantConnectionSettings.DATABASE.getKey(), String.valueOf(database));
@@ -115,20 +115,20 @@ public class CovenantProperties {
         this.operationTimeout = operationTimeout;
     }
 
-    public String getKeyStorePath() {
-        return keyStorePath;
+    public String getKeyPath() {
+        return keyPath;
     }
 
-    public void setKeyStorePath(String keyStorePath) {
-        this.keyStorePath = keyStorePath;
+    public void setKeyPath(String keyPath) {
+        this.keyPath = keyPath;
     }
 
-    public String getKeyStorePassword() {
-        return keyStorePassword;
+    public String getCertPath() {
+        return certPath;
     }
 
-    public void setKeyStorePassword(String keyStorePassword) {
-        this.keyStorePassword = keyStorePassword;
+    public void setCertPath(String certPath) {
+        this.certPath = certPath;
     }
 
     public boolean isSsl() {

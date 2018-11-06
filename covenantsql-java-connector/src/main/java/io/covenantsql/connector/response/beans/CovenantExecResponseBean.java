@@ -16,8 +16,10 @@
 
 package io.covenantsql.connector.response.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties({"data"})
 public class CovenantExecResponseBean {
     @JsonProperty
     String status;

@@ -101,7 +101,7 @@ public class CovenantPreparedStatementImpl extends CovenantStatementImpl impleme
                 }
             }
         }
-        parts.add(sql.substring(partStart, sql.length()));
+        parts.add(sql.substring(partStart));
 
         return parts;
     }
@@ -123,7 +123,7 @@ public class CovenantPreparedStatementImpl extends CovenantStatementImpl impleme
         checkBinded(binds);
 
         StringBuilder sb = new StringBuilder(sqlParts.get(0));
-        for (int i = 0; i < sqlParts.size(); i++) {
+        for (int i = 1; i < sqlParts.size(); i++) {
             appendBoundValue(sb, i - 1);
             sb.append(sqlParts.get(i));
         }
@@ -300,6 +300,8 @@ public class CovenantPreparedStatementImpl extends CovenantStatementImpl impleme
                 setTime(parameterIndex, (Time) x);
             } else if (x instanceof Timestamp) {
                 setTimestamp(parameterIndex, (Timestamp) x);
+            } else if (x instanceof java.util.Date) {
+                setTimestamp(parameterIndex, new Timestamp(((java.util.Date) x).getTime()));
             } else if (x instanceof Boolean) {
                 setBoolean(parameterIndex, (Boolean) x);
             } else if (x instanceof InputStream) {

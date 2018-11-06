@@ -51,11 +51,6 @@ public abstract class CovenantMockResultSetUnused implements ResultSet {
     }
 
     @Override
-    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public Object getObject(int columnIndex, Map<String, Class<?>> map) throws SQLException {
         throw new UnsupportedOperationException();
     }

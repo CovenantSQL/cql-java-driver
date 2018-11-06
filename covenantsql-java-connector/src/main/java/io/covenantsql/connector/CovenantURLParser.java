@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 public class CovenantURLParser {
     public static final String JDBC_PREFIX = "jdbc:";
     public static final String JDBC_DB_PREFIX = JDBC_PREFIX + "covenantsql:";
-    public static final Pattern DB_PATTERN = Pattern.compile("/([a-zA-Z0-9])+/");
+    public static final Pattern DB_PATTERN = Pattern.compile("([a-zA-Z0-9]+)");
     private static final Logger LOG = LoggerFactory.getLogger(CovenantURLParser.class);
 
     private CovenantURLParser() {
@@ -55,7 +55,7 @@ public class CovenantURLParser {
             throw new IllegalArgumentException("port is missed or wrong");
         }
         props.setPort(port);
-        String database = uri.getPath();
+        String database = StringUtils.strip(uri.getPath(), "/");
         if (StringUtils.isEmpty(database)) {
             database = defaults.getProperty(CovenantConnectionSettings.DATABASE.getKey());
         }

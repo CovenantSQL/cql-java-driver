@@ -24,8 +24,8 @@ public enum CovenantConnectionSettings {
     OPERATION_TIMEOUT("operation_timeout", 60 * 1000, "operation timeout in milliseconds"),
     SSL("ssl", false, "enable SSL/TLS for the connection"),
     SSL_MODE("sslmode", "strict", "verify certificate or not: none (don't verify), strict (verify)"),
-    KEYSTORE_PATH("keystore_path", "", "client keystore path use for requests in ssl mode"),
-    KEYSTORE_PASSWORD("keystore_password", "", "client keystore password for request in ssl mode"),
+    KEY_PATH("key_path", "", "client key use for requests in ssl mode"),
+    CERT_PATH("cert_path", "", "client certificate use for requests in ssl mode"),
     DATABASE("database", "", "database use to query");
 
 

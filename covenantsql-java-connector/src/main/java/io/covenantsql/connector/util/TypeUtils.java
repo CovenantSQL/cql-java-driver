@@ -16,15 +16,79 @@
 
 package io.covenantsql.connector.util;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
 
 public class TypeUtils {
+    private static final Logger LOG = LoggerFactory.getLogger(TypeUtils.class);
+
     public static int toSQLType(String type) {
-        return Types.VARCHAR;
+        type = type.toUpperCase();
+
+        if (StringUtils.contains(type, "INT")) {
+            // integer type
+            return Types.BIGINT;
+        } else if (StringUtils.containsAny(type, "CHAR", "CLOB", "TEXT")) {
+            return Types.VARCHAR;
+        } else if (StringUtils.contains(type, "BLOB") || StringUtils.isEmpty(type)) {
+            return Types.BLOB;
+        } else if (StringUtils.containsAny(type, "REAL", "FLOA", "DOUB")) {
+            return Types.DOUBLE;
+        } else if (StringUtils.contains(type, "BOOLEAN")) {
+            return Types.BOOLEAN;
+        } else if (StringUtils.containsAny(type, "TIMESTAMP", "DATETIME")) {
+            return Types.TIMESTAMP;
+        } else if (StringUtils.contains(type, "TIME")) {
+            return Types.TIME;
+        } else if (StringUtils.contains(type, "DATE")) {
+            return Types.DATE;
+        } else {
+            return Types.OTHER;
+        }
+    }
+
+    public static int toSQLTypeWithDetection(String type, Object value) {
+        if (value == null) {
+            return Types.NULL;
+        }
+
+        int typeResult = toSQLType(type);
+
+        if (typeResult != Types.OTHER) {
+            return typeResult;
+        }
+
+        // detect variable type by object
+        if (value instanceof String) {
+            // maybe blob
+            return Types.BLOB;
+        } else if (value instanceof Number) {
+            if (value instanceof Integer) {
+                return Types.INTEGER;
+            } else if (value instanceof Long) {
+                return Types.BIGINT;
+            } else if (value instanceof Float) {
+                return Types.FLOAT;
+            } else if (value instanceof Double) {
+                return Types.DOUBLE;
+            } else if (value instanceof BigInteger) {
+                return Types.VARCHAR;
+            } else if (value instanceof BigDecimal) {
+                return Types.DOUBLE;
+            }
+
+            return Types.NUMERIC;
+        } else {
+            return Types.OTHER;
+        }
     }
 
     public static Class toClass(int sqlType) throws SQLException {
