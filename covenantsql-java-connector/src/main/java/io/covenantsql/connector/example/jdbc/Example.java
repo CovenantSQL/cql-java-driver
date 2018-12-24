@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.covenantsql.connector.example;
+package io.covenantsql.connector.example.jdbc;
 
 import java.sql.*;
 import java.util.Date;
@@ -23,8 +23,6 @@ import java.util.Properties;
 public class Example {
     public static void main(String[] args) {
         try {
-            Class.forName("io.covenantsql.connector.CovenantDriver");
-
             Properties properties = new Properties();
 
             properties.setProperty("key_path", "write.test.covenantsql.io-key.pem");
@@ -77,7 +75,7 @@ public class Example {
             rs.close();
             stmt.close();
             conn.close();
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

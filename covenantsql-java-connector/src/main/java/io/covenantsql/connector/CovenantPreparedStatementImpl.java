@@ -27,8 +27,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.sql.*;
 import java.sql.Date;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -251,6 +251,7 @@ public class CovenantPreparedStatementImpl extends CovenantStatementImpl impleme
     }
 
     @Override
+    @Deprecated
     public void setUnicodeStream(int parameterIndex, InputStream x, int length) throws SQLException {
         throw new SQLFeatureNotSupportedException();
     }

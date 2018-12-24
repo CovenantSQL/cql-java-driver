@@ -380,6 +380,7 @@ public class CovenantResultSet extends CovenantMockResultSetUnused {
     }
 
     @Override
+    @Deprecated
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
         return getBigDecimal(columnIndex).setScale(scale, BigDecimal.ROUND_HALF_UP);
     }
@@ -463,6 +464,7 @@ public class CovenantResultSet extends CovenantMockResultSetUnused {
     }
 
     @Override
+    @Deprecated
     public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
         return getBigDecimal(asColumn(columnLabel), scale);
     }
