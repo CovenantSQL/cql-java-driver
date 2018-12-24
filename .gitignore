@@ -20,3 +20,4 @@ out
 classes
 .gradletasknamecache
 *.log
+.DS_Store
