@@ -152,6 +152,11 @@ public class CovenantResultSet extends CovenantMockResultSetUnused {
         return statement;
     }
 
+    @Override
+    public int getType() throws SQLException {
+        return ResultSet.TYPE_FORWARD_ONLY;
+    }
+
     public String[] getColumnNames() {
         return columns;
     }

@@ -198,11 +198,6 @@ public abstract class CovenantMockResultSetUnused implements ResultSet {
     }
 
     @Override
-    public int getType() throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public int getConcurrency() throws SQLException {
         throw new UnsupportedOperationException();
     }

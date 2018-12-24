@@ -16,10 +16,9 @@
 
 package io.covenantsql.connector;
 
+import com.google.common.base.Charsets;
 import io.covenantsql.connector.settings.CovenantProperties;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -33,9 +32,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CovenantPreparedStatementImpl extends CovenantStatementImpl implements CovenantPreparedStatement {
-    private static final Logger LOG = LoggerFactory.getLogger(CovenantPreparedStatement.class);
     private static final SimpleDateFormat dateFormat;
     private static final SimpleDateFormat dateTimeFormat;
+    private static final Charset defaultCharset = Charsets.UTF_8;
 
     static {
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -153,7 +152,7 @@ public class CovenantPreparedStatementImpl extends CovenantStatementImpl impleme
             sb.append(binds[i]);
             sb.append(i < binds.length - 1 ? '\t' : '\n');
         }
-        return sb.toString().getBytes(Charset.forName("UTF-8"));
+        return sb.toString().getBytes(defaultCharset);
     }
 
     @Override
@@ -227,7 +226,7 @@ public class CovenantPreparedStatementImpl extends CovenantStatementImpl impleme
 
     @Override
     public void setBytes(int parameterIndex, byte[] x) throws SQLException {
-        setBind(parameterIndex, new String(x, Charset.forName("UTF-8")));
+        setBind(parameterIndex, new String(x, defaultCharset));
     }
 
     @Override

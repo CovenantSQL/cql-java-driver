@@ -16,6 +16,7 @@
 
 package io.covenantsql.connector.example.jdbc;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.Date;
 import java.util.Properties;
@@ -24,15 +25,11 @@ public class Example {
     public static void main(String[] args) {
         try {
             Properties properties = new Properties();
-
-            properties.setProperty("key_path", "write.test.covenantsql.io-key.pem");
-            properties.setProperty("cert_path", "write.test.covenantsql.io.pem");
-            properties.setProperty("sslmode", "none");
-            properties.setProperty("ssl", "true");
+            properties.load(Example.class.getResourceAsStream("../common-config.properties"));
 
             String host = System.getProperty("COVENANTSQL_HOST", "127.0.0.1");
             String port = System.getProperty("COVENANTSQL_PORT", "11105");
-            String database = System.getProperty("COVENANTSQL_DATABASE", "0a255f136520a2bc6a29055a619ec4f72c2c80fa600daf73b1caa375946ea0e4");
+            String database = System.getProperty("COVENANTSQL_DATABASE", "0e90df0967ac55d0e72fb2539a7852ce10af0741736bc79c7796412c09b41150");
 
             String url = String.format("jdbc:covenantsql://%s:%s/%s", host, port, database);
             System.out.printf("Build url: %s\n", url);
@@ -75,7 +72,7 @@ public class Example {
             rs.close();
             stmt.close();
             conn.close();
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
