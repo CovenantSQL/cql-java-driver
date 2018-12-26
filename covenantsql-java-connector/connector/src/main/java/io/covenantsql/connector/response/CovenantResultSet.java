@@ -17,10 +17,12 @@
 package io.covenantsql.connector.response;
 
 import io.covenantsql.connector.CovenantStatement;
-import io.covenantsql.connector.response.beans.CovenantQueryResponseBean;
+import io.covenantsql.connector.response.beans.CovenantResponseBean;
 import io.covenantsql.connector.util.TypeUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -33,6 +35,7 @@ import java.util.Map;
 
 public class CovenantResultSet extends CovenantMockResultSetUnused {
     public static final CovenantResultSet EMPTY;
+    private static final Logger LOG = LoggerFactory.getLogger(CovenantResultSet.class);
     private static final String[] dateFormats = {
         "yyyy-MM-dd'T'HH:mm:ssXXX",
         "yyyy-MM-dd'T'HH:mm:ss",
@@ -46,6 +49,7 @@ public class CovenantResultSet extends CovenantMockResultSetUnused {
         "MMMM dd, yyyy",
         "dd/MM/yyyy",
         "dd-MM-yyyy",
+        "HH:mm:ss",
     };
 
     static {
@@ -58,7 +62,7 @@ public class CovenantResultSet extends CovenantMockResultSetUnused {
     private final Map<String, Integer> col = new HashMap<>();
     private final String[] types;
     private final String[] columns;
-    private final CovenantQueryResponseBean.CovenantQueryResponseDataBean dataBean;
+    private final CovenantResponseBean.DataBean dataBean;
 
     private int maxRows;
     private int lastReadColumn;
@@ -76,7 +80,7 @@ public class CovenantResultSet extends CovenantMockResultSetUnused {
         this.closed = true;
     }
 
-    public CovenantResultSet(CovenantQueryResponseBean.CovenantQueryResponseDataBean bean, String db, String table,
+    public CovenantResultSet(CovenantResponseBean.DataBean bean, String db, String table,
                              CovenantStatement statement) {
         this.db = db;
         this.table = table;
@@ -145,6 +149,11 @@ public class CovenantResultSet extends CovenantMockResultSetUnused {
     @Override
     public void close() throws SQLException {
         closed = true;
+    }
+
+    @Override
+    public boolean isClosed() throws SQLException {
+        return closed;
     }
 
     @Override
@@ -399,27 +408,42 @@ public class CovenantResultSet extends CovenantMockResultSetUnused {
     @Override
     public Date getDate(int columnIndex) throws SQLException {
         try {
-            return new Date(DateUtils.parseDate(getString(columnIndex), dateFormats).getTime());
+            String dateString = getString(columnIndex);
+            if (dateString == null) {
+                return null;
+            }
+            return new Date(DateUtils.parseDate(dateString, dateFormats).getTime());
         } catch (ParseException e) {
-            throw new SQLException("parse field to date type failed", e);
+            LOG.warn("parse field to date type failed", e);
+            return null;
         }
     }
 
     @Override
     public Time getTime(int columnIndex) throws SQLException {
         try {
-            return new Time(DateUtils.parseDate(getString(columnIndex), dateFormats).getTime());
+            String dateString = getString(columnIndex);
+            if (dateString == null) {
+                return null;
+            }
+            return new Time(DateUtils.parseDate(dateString, dateFormats).getTime());
         } catch (ParseException e) {
-            throw new SQLException("parse field to date type failed", e);
+            LOG.warn("parse field to time type failed", e);
+            return null;
         }
     }
 
     @Override
     public Timestamp getTimestamp(int columnIndex) throws SQLException {
         try {
-            return new Timestamp(DateUtils.parseDate(getString(columnIndex), dateFormats).getTime());
+            String dateString = getString(columnIndex);
+            if (dateString == null) {
+                return null;
+            }
+            return new Timestamp(DateUtils.parseDate(dateString, dateFormats).getTime());
         } catch (ParseException e) {
-            throw new SQLException("parse field to date type failed", e);
+            LOG.warn("parse field to timestamp type failed", e);
+            return null;
         }
     }
 

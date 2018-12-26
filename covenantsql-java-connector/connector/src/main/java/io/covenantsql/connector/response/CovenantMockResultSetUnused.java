@@ -553,11 +553,6 @@ public abstract class CovenantMockResultSetUnused implements ResultSet {
     }
 
     @Override
-    public boolean isClosed() throws SQLException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void updateNString(int columnIndex, String nString) throws SQLException {
         throw new UnsupportedOperationException();
     }

@@ -19,6 +19,10 @@ package io.covenantsql.connector.except;
 import java.sql.SQLException;
 
 public class CovenantException extends SQLException {
+    public CovenantException(String message) {
+        super(String.format("CovenantException, message: %s", message), null, 0);
+    }
+
     public CovenantException(String message, String host, int port) {
         super(String.format("CovenantException, message: %s, host: %s, port: %s",
             message, host, port), null, 0);

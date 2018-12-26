@@ -16,17 +16,18 @@
 
 package io.covenantsql.connector.response.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class CovenantQueryResponseBean {
-    @JsonProperty
+public class CovenantResponseBean {
+    @JsonProperty(required = true)
     String status;
-    @JsonProperty
+    @JsonProperty(required = true)
     boolean success;
     @JsonProperty
-    CovenantQueryResponseDataBean data;
+    DataBean data;
 
     public String getStatus() {
         return status;
@@ -44,21 +45,24 @@ public class CovenantQueryResponseBean {
         this.success = success;
     }
 
-    public CovenantQueryResponseDataBean getData() {
+    public DataBean getData() {
         return data;
     }
 
-    public void setData(CovenantQueryResponseDataBean data) {
+    public void setData(DataBean data) {
         this.data = data;
     }
 
-    public static final class CovenantQueryResponseDataBean {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static final class DataBean {
         @JsonProperty
         List<String> types;
         @JsonProperty
         List<String> columns;
         @JsonProperty
         List<List<Object>> rows;
+        @JsonProperty(value = "affected_rows")
+        int affectedRows;
 
         public List<String> getTypes() {
             return types;
@@ -82,6 +86,14 @@ public class CovenantQueryResponseBean {
 
         public void setRows(List<List<Object>> rows) {
             this.rows = rows;
+        }
+
+        public int getAffectedRows() {
+            return affectedRows;
+        }
+
+        public void setAffectedRows(int affectedRows) {
+            this.affectedRows = affectedRows;
         }
     }
 }

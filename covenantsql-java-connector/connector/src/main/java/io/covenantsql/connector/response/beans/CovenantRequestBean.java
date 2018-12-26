@@ -16,29 +16,39 @@
 
 package io.covenantsql.connector.response.beans;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties({"data"})
-public class CovenantExecResponseBean {
+import java.util.List;
+
+public class CovenantRequestBean {
     @JsonProperty
-    String status;
+    String database;
     @JsonProperty
-    boolean success;
+    String query;
+    @JsonProperty
+    List<Object> args;
 
-    public String getStatus() {
-        return status;
+    public String getDatabase() {
+        return database;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setDatabase(String database) {
+        this.database = database;
     }
 
-    public boolean isSuccess() {
-        return success;
+    public String getQuery() {
+        return query;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public void setQuery(String query) {
+        this.query = query;
+    }
+
+    public List<Object> getArgs() {
+        return args;
+    }
+
+    public void setArgs(List<Object> args) {
+        this.args = args;
     }
 }

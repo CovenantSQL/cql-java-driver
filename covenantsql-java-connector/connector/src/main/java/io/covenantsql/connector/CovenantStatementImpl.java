@@ -19,16 +19,16 @@ package io.covenantsql.connector;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.covenantsql.connector.except.CovenantException;
 import io.covenantsql.connector.response.CovenantResultSet;
-import io.covenantsql.connector.response.beans.CovenantExecResponseBean;
-import io.covenantsql.connector.response.beans.CovenantQueryResponseBean;
+import io.covenantsql.connector.response.beans.CovenantRequestBean;
+import io.covenantsql.connector.response.beans.CovenantResponseBean;
 import io.covenantsql.connector.settings.CovenantProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.fluent.Executor;
-import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +38,7 @@ import java.net.URI;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class CovenantStatementImpl extends CovenantMockStatementUnused implements CovenantStatement {
     private static final Logger LOG = LoggerFactory.getLogger(CovenantStatementImpl.class);
@@ -51,6 +52,7 @@ public class CovenantStatementImpl extends CovenantMockStatementUnused implement
     protected CovenantProperties properties;
     private CovenantConnection connection;
     private CovenantResultSet currentResultSet;
+    private int currentUpdateCount = -1;
     private int queryTimeout;
     private int maxRows;
 
@@ -62,7 +64,7 @@ public class CovenantStatementImpl extends CovenantMockStatementUnused implement
         this.executor = Executor.newInstance(httpClient);
     }
 
-    private static boolean isSelect(String sql) {
+    protected static boolean isSelect(String sql) {
         return StringUtils.startsWithIgnoreCase(sql, "SELECT") ||
             StringUtils.startsWithIgnoreCase(sql, "SHOW") ||
             StringUtils.startsWithIgnoreCase(sql, "DESC");
@@ -91,26 +93,18 @@ public class CovenantStatementImpl extends CovenantMockStatementUnused implement
 
     @Override
     public ResultSet executeQuery(String sql) throws SQLException {
+        return executeQuery(sql, null);
+    }
+
+    @Override
+    public int executeUpdate(String sql) throws SQLException {
+        return executeUpdate(sql, (List<Object>) null);
+    }
+
+    public ResultSet executeQuery(String sql, List<Object> params) throws SQLException {
         try {
             if (isSelect(sql)) {
-                URI uri = new URIBuilder()
-                    .setHost(properties.getHost())
-                    .setPort(properties.getPort())
-                    .setScheme(properties.isSsl() ? "https" : "http")
-                    .setPath(API_QUERY)
-                    .build();
-
-                CovenantQueryResponseBean resultBean = executor.execute(Request.Post(uri)
-                    .bodyForm(Form.form()
-                        .add("database", properties.getDatabase())
-                        .add("query", sql)
-                        .build()))
-                    .handleResponse(new ResponseHandler<CovenantQueryResponseBean>() {
-                        @Override
-                        public CovenantQueryResponseBean handleResponse(HttpResponse response) throws IOException {
-                            return objectMapper.readValue(response.getEntity().getContent(), CovenantQueryResponseBean.class);
-                        }
-                    });
+                CovenantResponseBean resultBean = sendRequest(API_QUERY, sql, params);
 
                 if (!resultBean.isSuccess()) {
                     throw new CovenantException(resultBean.getStatus(), properties.getHost(), properties.getPort());
@@ -120,8 +114,8 @@ public class CovenantStatementImpl extends CovenantMockStatementUnused implement
                 currentResultSet.setMaxRows(maxRows);
                 return currentResultSet;
             } else {
-                executeUpdate(sql);
-                return null;
+                executeUpdate(sql, params);
+                return currentResultSet;
             }
         } catch (Exception e) {
             // re-throw
@@ -130,34 +124,50 @@ public class CovenantStatementImpl extends CovenantMockStatementUnused implement
     }
 
     @Override
-    public int executeUpdate(String sql) throws SQLException {
+    public int getUpdateCount() throws SQLException {
+        return currentUpdateCount;
+    }
+
+    public int executeUpdate(String sql, List<Object> params) throws SQLException {
+        try {
+            CovenantResponseBean resultBean = sendRequest(API_EXEC, sql, params);
+
+            if (!resultBean.isSuccess()) {
+                throw new CovenantException(resultBean.getStatus(), properties.getHost(), properties.getPort());
+            }
+            currentResultSet = CovenantResultSet.EMPTY;
+            currentUpdateCount = resultBean.getData() != null ? resultBean.getData().getAffectedRows() : -1;
+
+            return 1;
+        } catch (Exception e) {
+            // re-throw
+            throw new CovenantException(e, properties.getHost(), properties.getPort());
+        }
+    }
+
+    public CovenantResponseBean sendRequest(String path, String sql, List<Object> params) throws SQLException {
         try {
             URI uri = new URIBuilder()
                 .setHost(properties.getHost())
                 .setPort(properties.getPort())
                 .setScheme(properties.isSsl() ? "https" : "http")
-                .setPath(API_EXEC)
+                .setPath(path)
                 .build();
 
-            CovenantExecResponseBean resultBean = executor.execute(Request.Post(uri)
-                .bodyForm(Form.form()
-                    .add("database", properties.getDatabase())
-                    .add("query", sql)
-                    .build()))
-                .handleResponse(new ResponseHandler<CovenantExecResponseBean>() {
+            CovenantRequestBean bean = new CovenantRequestBean();
+            bean.setDatabase(properties.getDatabase());
+            bean.setQuery(sql);
+            bean.setArgs(params);
+
+            return executor.execute(Request.Post(uri)
+                .bodyString(objectMapper.writeValueAsString(bean), ContentType.APPLICATION_JSON))
+                .handleResponse(new ResponseHandler<CovenantResponseBean>() {
                     @Override
-                    public CovenantExecResponseBean handleResponse(HttpResponse response) throws IOException {
-                        return objectMapper.readValue(response.getEntity().getContent(), CovenantExecResponseBean.class);
+                    public CovenantResponseBean handleResponse(HttpResponse response) throws IOException {
+                        return objectMapper.readValue(response.getEntity().getContent(), CovenantResponseBean.class);
                     }
                 });
-
-            if (!resultBean.isSuccess()) {
-                throw new CovenantException(resultBean.getStatus(), properties.getHost(), properties.getPort());
-            }
-
-            return 1;
         } catch (Exception e) {
-            // re-throw
             throw new CovenantException(e, properties.getHost(), properties.getPort());
         }
     }
@@ -208,6 +218,7 @@ public class CovenantStatementImpl extends CovenantMockStatementUnused implement
         if (currentResultSet != null) {
             currentResultSet.close();
             currentResultSet = null;
+            currentUpdateCount = -1;
         }
 
         return false;
