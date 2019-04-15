@@ -51,6 +51,13 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>internal</id>
+            <url>file://${project.build.directory}/mvn-repo</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <http-client.version>4.5.6</http-client.version>
         <guava.version>20.0</guava.version>
