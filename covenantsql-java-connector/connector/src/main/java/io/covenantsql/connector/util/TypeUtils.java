@@ -50,6 +50,8 @@ public class TypeUtils {
             return Types.TIME;
         } else if (StringUtils.contains(type, "DATE")) {
             return Types.DATE;
+        } else if (StringUtils.contains(type, "DECIMAL")) {
+            return Types.DECIMAL;
         } else {
             return Types.OTHER;
         }
@@ -78,7 +80,7 @@ public class TypeUtils {
             } else if (value instanceof BigInteger) {
                 return Types.VARCHAR;
             } else if (value instanceof BigDecimal) {
-                return Types.DOUBLE;
+                return Types.DECIMAL;
             }
 
             return Types.NUMERIC;
@@ -107,6 +109,7 @@ public class TypeUtils {
             case Types.VARCHAR:
             case Types.LONGVARCHAR:
             case Types.BLOB:
+            case Types.OTHER:
                 return String.class;
             case Types.FLOAT:
             case Types.REAL:
