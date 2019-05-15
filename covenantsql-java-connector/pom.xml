@@ -62,6 +62,7 @@
                     </includes>
                     <repositoryName>covenant-connector</repositoryName>
                     <repositoryOwner>CovenantSQL</repositoryOwner>
+                    <merge>true</merge>
                 </configuration>
                 <executions>
                     <execution>
