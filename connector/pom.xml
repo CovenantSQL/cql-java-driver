@@ -39,8 +39,8 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/CovenantSQL/covenant-connector.git</connection>
-        <url>scm:git:git://github.com/CovenantSQL/covenant-connector.git</url>
+        <connection>scm:git:git://github.com/CovenantSQL/cql-java-driver.git</connection>
+        <url>scm:git:git://github.com/CovenantSQL/cql-java-driver.git</url>
     </scm>
 
     <build>
