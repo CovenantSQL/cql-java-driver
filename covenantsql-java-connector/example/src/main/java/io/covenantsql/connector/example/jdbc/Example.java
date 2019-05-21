@@ -27,9 +27,9 @@ public class Example {
             Properties properties = new Properties();
             properties.load(Example.class.getResourceAsStream("../common-config.properties"));
 
-            String host = System.getProperty("COVENANTSQL_HOST", "127.0.0.1");
-            String port = System.getProperty("COVENANTSQL_PORT", "11105");
-            String database = System.getProperty("COVENANTSQL_DATABASE", "0e90df0967ac55d0e72fb2539a7852ce10af0741736bc79c7796412c09b41150");
+            String host = System.getProperty("COVENANTSQL_HOST", "adp00.cn.gridb.io");
+            String port = System.getProperty("COVENANTSQL_PORT", "7784");
+            String database = System.getProperty("COVENANTSQL_DATABASE", "e1c4e80701773c1656a99d317148f2eada0fc6f2dad33afd5425e65bc9a35270");
 
             String url = String.format("jdbc:covenantsql://%s:%s/%s", host, port, database);
             System.out.printf("Build url: %s\n", url);

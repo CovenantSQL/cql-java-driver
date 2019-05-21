@@ -17,11 +17,11 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="example.mybatis.UserMapper">
-    <select id="selectUsers" resultType="example.mybatis.User">
+<mapper namespace="io.covenantsql.connector.example.mybatis.UserMapper">
+    <select id="selectUsers" resultType="io.covenantsql.connector.example.mybatis.User">
         SELECT * FROM users
     </select>
-    <select id="getUser" resultType="example.mybatis.User">
+    <select id="getUser" resultType="io.covenantsql.connector.example.mybatis.User">
         SELECT * FROM users WHERE email = #{param1} LIMIT 1
     </select>
     <insert id="addNewUser">
