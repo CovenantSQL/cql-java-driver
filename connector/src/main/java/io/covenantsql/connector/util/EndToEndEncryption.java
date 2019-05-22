@@ -16,24 +16,12 @@
 
 package io.covenantsql.connector.util;
 
-import java.nio.charset.Charset;
 import java.security.*;
-
-import org.bouncycastle.crypto.CipherParameters;
-import org.bouncycastle.crypto.InvalidCipherTextException;
-import org.bouncycastle.crypto.engines.AESEngine;
-import org.bouncycastle.crypto.modes.CBCBlockCipher;
-import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
-import org.bouncycastle.crypto.params.KeyParameter;
-import org.bouncycastle.crypto.params.ParametersWithIV;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.math.BigInteger;
 
 
 public class EndToEndEncryption {
@@ -42,10 +30,6 @@ public class EndToEndEncryption {
             (byte) 0x3f, (byte) 0xb8, (byte) 0x87, (byte) 0x7d, (byte) 0x37, (byte) 0xfd, (byte) 0xc0, (byte) 0x4e,
             (byte) 0x4a, (byte) 0x47, (byte) 0x65, (byte) 0xEF, (byte) 0xb8, (byte) 0xab, (byte) 0x7d, (byte) 0x36
     };
-
-//    public EndToEndEncryption() {
-//        Security.addProvider(new BouncyCastleProvider());
-//    }
 
     private static byte[] generateIV() {
         byte[] ivBytes = new byte[16];
@@ -56,17 +40,17 @@ public class EndToEndEncryption {
     private static byte[] kdf(byte[] rawPass) {
         MessageDigest sha = null;
         MessageDigest final_sha = null;
+        byte[] key = new byte[16];
         try {
             sha = MessageDigest.getInstance("SHA-256");
             final_sha = MessageDigest.getInstance("SHA-256");
+            sha.update(rawPass);
+            sha.update(salt);
+            final_sha.update(sha.digest());
+            System.arraycopy(final_sha.digest(), 0, key, 0, 16);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        sha.update(rawPass);
-        sha.update(salt);
-        final_sha.update(sha.digest());
-        byte[] key = new byte[16];
-        System.arraycopy(final_sha.digest(), 0, key, 0, 16);
         return key;
     }
 
@@ -130,9 +114,7 @@ public class EndToEndEncryption {
 
             cipher.init(Cipher.DECRYPT_MODE, symKey, iv);
 
-            final byte[] decodedMessage = cipher.doFinal(encryptedMessage);
-
-            return decodedMessage;
+            return cipher.doFinal(encryptedMessage);
         } catch (InvalidKeyException e) {
             throw new IllegalArgumentException(
                     "key argument does not contain a valid AES key");
