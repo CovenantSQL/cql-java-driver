@@ -1,6 +1,6 @@
 # CovenantSQL-Java-Connector
 
-CovenantSQL-Java-Connector is a Type 4 Java JDBC driver for CovenantSQL database querying.
+CovenantSQL-Java-Connector is a Type 4 Java JDBC driver for CovenantSQL (covenantsql.io) database querying.
 
 ## Adding CovenantSQL-Java-Connector to your build 
 
