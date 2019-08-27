@@ -21,12 +21,35 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.covenantsql</groupId>
-    <artifactId>covenantsql-java</artifactId>
+    <artifactId>cql-java-driver</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
+    <name>cql-java-driver</name>
+    <description>CovenantSQL 数据库 Java Driver</description>
+    <url>https://covenantsql.io</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>laodouya</name>
+            <email>jin.xu@CovenantSQL.io</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git@github.com:CovenantSQL/cql-java-driver.git</connection>
+        <developerConnection>scm:git@github.com:CovenantSQL/cql-java-driver.git</developerConnection>
+        <url>git@github.com:CovenantSQL/cql-java-driver.git</url>
+    </scm>
 
     <modules>
-        <module>example</module>
+        <!--module>example</module-->
         <module>connector</module>
     </modules>
 
@@ -40,15 +63,29 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
-            <plugin>
+            <!-- Javadoc -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+            <!--plugin>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.3</version>
                 <configuration>
                     <goals>deploy</goals>
                     <connectionUrl>scm:git:git://github.com/CovenantSQL/cql-java-driver.git</connectionUrl>
                 </configuration>
-            </plugin>
-            <plugin>
+            </plugin-->
+            <!--plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
                 <version>0.11</version>
@@ -72,7 +109,7 @@
                         <phase>deploy</phase>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin-->
         </plugins>
     </build>
 
@@ -82,6 +119,79 @@
             <url>file://${project.build.directory}/mvn-repo</url>
         </repository>
     </distributionManagement>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>oss</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+				</snapshotRepository>
+				<repository>
+					<id>oss</id>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+			</distributionManagement>
+			<build>
+				<plugins>
+					<!-- Source -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.1.0</version>
+						<executions>
+							<execution>
+								<id>oss</id>
+								<phase>package</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>cobertura-maven-plugin</artifactId>
+						<version>2.7</version>
+						<configuration>
+							<formats>
+								<format>html</format>
+								<format>xml</format>
+							</formats>
+							<check />
+						</configuration>
+					</plugin>
+					<!-- Gpg Signature -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>oss</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.8</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>oss</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
     <properties>
         <http-client.version>4.5.6</http-client.version>
