@@ -7,26 +7,11 @@ CovenantSQL-Java-Connector is a Type 4 Java JDBC driver for [CovenantSQL](https:
 To add a dependency using Maven, use the following:
 
 ```xml
-<repositories>
-    <repository>
-        <id>mvn-repo</id>
-        <url>https://raw.github.com/CovenantSQL/cql-java-driver/mvn-repo</url>
-        <releases>
-            <enabled>true</enabled>
-        </releases>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-    </repository>
-</repositories>
-
-<dependencies>
-    <dependency>
-        <groupId>io.covenantsql</groupId>
-        <artifactId>covenantsql-java-connector</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </dependency>
-</dependencies>
+        <dependency>
+            <groupId>io.covenantsql</groupId>
+            <artifactId>cql-java-connector</artifactId>
+            <version>1.0.1</version>
+        </dependency>
 ```
 
 To add a dependency using Gradle:
