@@ -23,7 +23,7 @@
     <groupId>io.covenantsql</groupId>
     <artifactId>cql-java-driver</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
     <name>cql-java-driver</name>
     <description>CovenantSQL 数据库 Java Driver</description>
     <url>https://covenantsql.io</url>
