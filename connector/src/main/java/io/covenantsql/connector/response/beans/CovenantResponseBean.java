@@ -63,6 +63,8 @@ public class CovenantResponseBean {
         List<List<Object>> rows;
         @JsonProperty(value = "affected_rows")
         int affectedRows;
+        @JsonProperty(value = "last_insert_id")
+        int lastInsertId;
 
         public List<String> getTypes() {
             return types;
@@ -94,6 +96,14 @@ public class CovenantResponseBean {
 
         public void setAffectedRows(int affectedRows) {
             this.affectedRows = affectedRows;
+        }
+
+        public int getLastInsertId() {
+            return lastInsertId;
+        }
+
+        public void setLastInsertId(int lastInsertId) {
+            this.lastInsertId = lastInsertId;
         }
     }
 }
