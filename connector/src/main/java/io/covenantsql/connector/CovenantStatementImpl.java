@@ -40,7 +40,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CovenantStatementImpl extends CovenantMockStatementUnused implements CovenantStatement {
@@ -198,8 +197,10 @@ public class CovenantStatementImpl extends CovenantMockStatementUnused implement
 
         // build data bean fit to CovenantResultSet
         CovenantResponseBean.DataBean keyResult = new CovenantResponseBean.DataBean();
-        List<List<Object>> keyRows = new ArrayList<>();
-        keyRows.add(Lists.newArrayList(currentLastInsertId));
+        List<List<Object>> keyRows = Lists.newArrayList();
+        List<Object> keyValues = Lists.newArrayList();
+        keyValues.add(currentLastInsertId);
+        keyRows.add(keyValues);
 
         keyResult.setRows(keyRows);
         keyResult.setColumns(Lists.newArrayList("insert_id"));
