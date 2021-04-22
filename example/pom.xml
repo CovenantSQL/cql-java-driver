@@ -41,6 +41,6 @@
     </dependencies>
 
     <properties>
-        <mybatis.version>3.4.6</mybatis.version>
+        <mybatis.version>3.5.6</mybatis.version>
     </properties>
 </project>
